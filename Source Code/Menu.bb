@@ -27,8 +27,18 @@ Global MenuStr$, MenuStrX%, MenuStrY%
 
 Global MainMenuTab%
 
+Global SelectedChapter% = CHAPTER1
 
-Global IntroEnabled% = GetINIInt(OptionFile, "options", "intro enabled")
+Const CHAPTER1=0, CHAPTER2=1, CHAPTER3=2, CHAPTER4=3, CHAPTER5=4, CHAPTER6=5
+
+Dim ChapterNames$(6)
+ChapterNames(CHAPTER1)="1: Start"
+ChapterNames(CHAPTER2)="2: The Old Man"
+ChapterNames(CHAPTER3)="3: Heavy Comtainment zone"
+ChapterNames(CHAPTER4)="4: Light Containment Zone"
+ChapterNames(CHAPTER5)="5: Entrance Zone"
+ChapterNames(CHAPTER6)="6: End"
+
 
 Global SelectedInputBox%
 
@@ -234,7 +244,6 @@ Function UpdateMainMenu()
 		If DrawButton(x + width + 20 * MenuScale, y, 580 * MenuScale - width - 20 * MenuScale, height, "BACK", False) Then 
 			Select MainMenuTab
 				Case 1
-					PutINIValue(OptionFile, "options", "intro enabled", IntroEnabled%)
 					MainMenuTab = 0
 				Case 2
 					CurrLoadGamePage = 0
@@ -273,7 +282,7 @@ Function UpdateMainMenu()
 				x = 160 * MenuScale
 				y = y + height + 20 * MenuScale
 				width = 580 * MenuScale
-				height = 330 * MenuScale
+				height = 450 * MenuScale
 				
 				DrawFrame(x, y, width, height)				
 				
@@ -316,40 +325,43 @@ Function UpdateMainMenu()
 					EndIf
 				EndIf	
 				
-				AAText(x + 20 * MenuScale, y + 110 * MenuScale, "Enable intro sequence:")
-				IntroEnabled = DrawTick(x + 280 * MenuScale, y + 110 * MenuScale, IntroEnabled)	
+				AAText(x + 20 * MenuScale, y + 110 * MenuScale, "Chapter selection:")
+				For i = CHAPTER1 To CHAPTER6
+					If DrawTick(x + (20+260*(i Mod 2)) * MenuScale, y + (140+30*(i/2)) * MenuScale, (SelectedChapter = i)) Then SelectedChapter = i
+					AAText(x + (60+260*(i Mod 2)) * MenuScale, y + (140+30*(i/2)) * MenuScale, ChapterNames(i))
+				Next
 				
 				;Local modeName$, modeDescription$, selectedDescription$
-				AAText (x + 20 * MenuScale, y + 150 * MenuScale, "Difficulty:")				
+				AAText (x + 20 * MenuScale, y + 270 * MenuScale, "Difficulty:")				
 				For i = SAFE To CUSTOM
-					If DrawTick(x + 20 * MenuScale, y + (180+30*i) * MenuScale, (SelectedDifficulty = difficulties(i))) Then SelectedDifficulty = difficulties(i)
+					If DrawTick(x + 20 * MenuScale, y + (300+30*i) * MenuScale, (SelectedDifficulty = difficulties(i))) Then SelectedDifficulty = difficulties(i)
 					Color(difficulties(i)\r,difficulties(i)\g,difficulties(i)\b)
-					AAText(x + 60 * MenuScale, y + (180+30*i) * MenuScale, difficulties(i)\name)
+					AAText(x + 60 * MenuScale, y + (300+30*i) * MenuScale, difficulties(i)\name)
 				Next
 				
 				Color(255, 255, 255)
-				DrawFrame(x + 150 * MenuScale,y + 155 * MenuScale, 410*MenuScale, 150*MenuScale)
+				DrawFrame(x + 150 * MenuScale,y + 275 * MenuScale, 410*MenuScale, 150*MenuScale)
 				
 				If SelectedDifficulty\customizable Then
-					SelectedDifficulty\permaDeath =  DrawTick(x + 160 * MenuScale, y + 165 * MenuScale, (SelectedDifficulty\permaDeath))
-					AAText(x + 200 * MenuScale, y + 165 * MenuScale, "Permadeath")
+					SelectedDifficulty\permaDeath =  DrawTick(x + 160 * MenuScale, y + 285 * MenuScale, (SelectedDifficulty\permaDeath))
+					AAText(x + 200 * MenuScale, y + 285 * MenuScale, "Permadeath")
 					
-					If DrawTick(x + 160 * MenuScale, y + 195 * MenuScale, SelectedDifficulty\saveType = SAVEANYWHERE And (Not SelectedDifficulty\permaDeath), SelectedDifficulty\permaDeath) Then 
+					If DrawTick(x + 160 * MenuScale, y + 315 * MenuScale, SelectedDifficulty\saveType = SAVEANYWHERE And (Not SelectedDifficulty\permaDeath), SelectedDifficulty\permaDeath) Then 
 						SelectedDifficulty\saveType = SAVEANYWHERE
 					Else
 						SelectedDifficulty\saveType = SAVEONSCREENS
 					EndIf
 					
-					AAText(x + 200 * MenuScale, y + 195 * MenuScale, "Save anywhere")	
+					AAText(x + 200 * MenuScale, y + 315 * MenuScale, "Save anywhere")	
 					
-					SelectedDifficulty\aggressiveNPCs =  DrawTick(x + 160 * MenuScale, y + 225 * MenuScale, SelectedDifficulty\aggressiveNPCs)
-					AAText(x + 200 * MenuScale, y + 225 * MenuScale, "Aggressive NPCs")
+					SelectedDifficulty\aggressiveNPCs =  DrawTick(x + 160 * MenuScale, y + 345 * MenuScale, SelectedDifficulty\aggressiveNPCs)
+					AAText(x + 200 * MenuScale, y + 345 * MenuScale, "Aggressive NPCs")
 					
 					;Other factor's difficulty
 					Color 255,255,255
-					DrawImage ArrowIMG(1),x + 155 * MenuScale, y+251*MenuScale
+					DrawImage ArrowIMG(1),x + 155 * MenuScale, y+371*MenuScale
 					If MouseHit1
-						If ImageRectOverlap(ArrowIMG(1),x + 155 * MenuScale, y+251*MenuScale, ScaledMouseX(),ScaledMouseY(),0,0)
+						If ImageRectOverlap(ArrowIMG(1),x + 155 * MenuScale, y+371*MenuScale, ScaledMouseX(),ScaledMouseY(),0,0)
 							If SelectedDifficulty\otherFactors < HARD
 								SelectedDifficulty\otherFactors = SelectedDifficulty\otherFactors + 1
 							Else
@@ -361,14 +373,14 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					Select SelectedDifficulty\otherFactors
 						Case EASY
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Easy")
+							AAText(x + 200 * MenuScale, y + 375 * MenuScale, "Other difficulty factors: Easy")
 						Case NORMAL
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Normal")
+							AAText(x + 200 * MenuScale, y + 375 * MenuScale, "Other difficulty factors: Normal")
 						Case HARD
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Hard")
+							AAText(x + 200 * MenuScale, y + 375 * MenuScale, "Other difficulty factors: Hard")
 					End Select
 				Else
-					RowText(SelectedDifficulty\description, x+160*MenuScale, y+160*MenuScale, (410-20)*MenuScale, 200)					
+					RowText(SelectedDifficulty\description, x+160*MenuScale, y+280*MenuScale, (410-20)*MenuScale, 200)					
 				EndIf
 				
 				If DrawButton(x, y + height + 20 * MenuScale, 160 * MenuScale, 70 * MenuScale, "Load map", False) Then
@@ -401,9 +413,6 @@ Function UpdateMainMenu()
 					MainMenuOpen = False
 					FlushKeys()
 					FlushMouse()
-					
-					PutINIValue(OptionFile, "options", "intro enabled", IntroEnabled%)
-					
 				EndIf
 				
 				;[End Block]
@@ -1163,12 +1172,12 @@ Function UpdateLauncher()
 	BlinkMeterIMG% = LoadImage_Strict("GFX\blinkmeter.jpg")
 	CheckForUpdates()
 	
-	AppTitle "SCP - Containment Breach Launcher"
+	AppTitle "SCP - Amended Mod"
 	
 	Repeat
 		
 		;Cls
-		Color 0,0,0
+		Color 255,255,255
 		Rect 0,0,LauncherWidth,LauncherHeight,True
 		
 		MouseHit1 = MouseHit(1)
@@ -1181,7 +1190,7 @@ Function UpdateLauncher()
 		Local x% = 40
 		Local y% = 270 - 65
 		For i = 0 To (GFXModes - 1)
-			Color 0, 0, 0
+			Color 255, 255, 255
 			If SelectedGFXMode = i Then Rect(x - 1, y - 1, 100, 20, False)
 			
 			Text(x, y, (GfxModeWidths(i) + "x" + GfxModeHeights(i)))
@@ -1196,7 +1205,7 @@ Function UpdateLauncher()
 		Next
 		
 		;-----------------------------------------------------------------
-		Color 255, 255, 255
+		Color 0, 0, 0
 		x = 30
 		y = 369
 		Rect(x - 10, y, 340, 95)
@@ -1204,12 +1213,12 @@ Function UpdateLauncher()
 		
 		y=y+10
 		For i = 1 To CountGfxDrivers()
-			Color 0, 0, 0
+			Color 255, 255, 255
 			If SelectedGFXDriver = i Then Rect(x - 1, y - 1, 290, 20, False)
 			;text(x, y, bbGfxDriverName(i))
 			LimitText(GfxDriverName(i), x, y, 290, False)
 			If MouseOn(x - 1, y - 1, 290, 20) Then
-				Color 100, 100, 100
+				Color 255, 255, 255
 				Rect(x - 1, y - 1, 290, 20, False)
 				If MouseHit1 Then SelectedGFXDriver = i
 			EndIf
@@ -1270,6 +1279,11 @@ Function UpdateLauncher()
 		Text LauncherWidth-250,LauncherHeight-70,"Check for"
 		Text LauncherWidth-250,LauncherHeight-50,"updates on"
 		Text LauncherWidth-250,LauncherHeight-30,"launch"
+		
+		If DrawButton(LauncherWidth - 275, LauncherHeight - 50 - 55, 150, 30, "MODDB Page", False, False, False) Then
+		    ExecFile("https://www.moddb.com/mods/scp-containment-breach-amended/#processmediaform")
+			
+		EndIf
 		
 		If DrawButton(LauncherWidth - 30 - 90, LauncherHeight - 50 - 55, 100, 30, "LAUNCH", False, False, False) Then
 			GraphicWidth = GfxModeWidths(SelectedGFXMode)
@@ -1550,8 +1564,8 @@ Function DrawLoading(percent%, shortloading=False)
 		AAText(GraphicWidth / 2, GraphicHeight / 2 - 100, "LOADING - " + percent + " %", True, True)
 		
 		If percent = 100 Then 
-			If firstloop And SelectedLoadingScreen\title <> "CWM" Then PlaySound_Strict LoadTempSound(("SFX\Horror\Horror8.ogg"))
-			AAText(GraphicWidth / 2, GraphicHeight - 50, "PRESS ANY KEY TO CONTINUE", True, True)
+			If firstloop And SelectedLoadingScreen\title <> "CWM" Then PlaySound_Strict LoadTempSound(("SFX\Horror\Horror17.ogg"))
+			AAText(GraphicWidth / 2, GraphicHeight - 50, "PRESS ANY KEY TO WAKE UP", True, True)
 		Else
 			FlushKeys()
 			FlushMouse()
@@ -2260,7 +2274,7 @@ Function ChangeMenu_TestIMG(change$)
 	
 	CurrMenu_TestIMG = change$
 	
-End Function
+End Function 
 
 Global OnSliderID% = 0
 
@@ -2631,6 +2645,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#33#499#4AB#4B5#4E8#5C3#5D6#5F3#5FA#615#629#64A#662#693#6C4#6EA#710#72D#73E#756
-;~F#764#787#79F#7A8#7D9#7ED#821#867#8A9
 ;~C#Blitz3D

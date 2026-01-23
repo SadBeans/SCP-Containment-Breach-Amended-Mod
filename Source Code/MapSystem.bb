@@ -3939,86 +3939,7 @@ Function FillRoom(r.Rooms)
 			;[End Block]
 		Case "start"
 			;[Block]
-			;the containment doors
-			r\RoomDoors[1] = CreateDoor(r\zone, r\x + 4000.0 * RoomScale, 384.0*RoomScale, r\z + 1696.0 * RoomScale, 90, r, True, True)
-			r\RoomDoors[1]\locked = False : r\RoomDoors[1]\AutoClose = False
-			r\RoomDoors[1]\dir = 1 : r\RoomDoors[1]\open = True 
-			FreeEntity(r\RoomDoors[1]\buttons[0]) : r\RoomDoors[1]\buttons[0] = 0
-			FreeEntity(r\RoomDoors[1]\buttons[1]) : r\RoomDoors[1]\buttons[1] = 0
-			r\RoomDoors[1]\MTFClose = False
 			
-			r\RoomDoors[2] = CreateDoor(r\zone, r\x + 2704.0 * RoomScale, 384.0*RoomScale, r\z + 624.0 * RoomScale, 90, r, False)
-			r\RoomDoors[2]\AutoClose = False : r\RoomDoors[2]\open = False
-			FreeEntity(r\RoomDoors[2]\buttons[0]) : r\RoomDoors[2]\buttons[0] = 0
-			FreeEntity(r\RoomDoors[2]\buttons[1]) : r\RoomDoors[2]\buttons[1] = 0
-			r\RoomDoors[2]\MTFClose = False
-			
-			d.Doors = CreateDoor(r\zone, r\x + 1392.0 * RoomScale, 384.0*RoomScale, r\z + 64.0 * RoomScale, 90, r, True)
-			d\AutoClose = False
-			d\MTFClose = False
-			d\locked = True
-			
-			d.Doors = CreateDoor(r\zone, r\x - 640.0 * RoomScale, 384.0*RoomScale, r\z + 64.0 * RoomScale, 90, r, False)
-			d\locked = True : d\AutoClose = False
-			
-			d.Doors = CreateDoor(r\zone, r\x + 1280.0 * RoomScale, 384.0*RoomScale, r\z + 312.0 * RoomScale, 180, r, True)
-			d\locked = True : d\AutoClose = False
-			PositionEntity(d\buttons[0], r\x + 1120.0 * RoomScale, EntityY(d\buttons[0],True), r\z + 328.0 * RoomScale, True)
-			PositionEntity(d\buttons[1], r\x + 1120.0 * RoomScale, EntityY(d\buttons[1],True), r\z + 296.0 * RoomScale, True)
-			FreeEntity(d\obj2) : d\obj2=0
-			d\MTFClose = False
-			
-			d.Doors = CreateDoor(r\zone, r\x, 0, r\z + 1184.0 * RoomScale, 0, r, False)
-			d\locked = True
-			
-			r\Objects[0] = LoadMesh_Strict("GFX\map\IntroDesk.b3d")
-			ScaleEntity r\Objects[0], RoomScale, RoomScale ,RoomScale
-			PositionEntity r\Objects[0], r\x + 272.0 * RoomScale, 0, r\z + 400.0 * RoomScale
-			EntityParent r\Objects[0], r\obj
-			
-			de.Decals = CreateDecal(0, r\x + 272.0 * RoomScale, 0.005, r\z + 262.0 * RoomScale, 90, Rand(360), 0)
-			EntityParent(de\obj, r\obj)
-			
-			r\Objects[1] = LoadMesh_Strict("GFX\map\IntroDrawer.b3d")
-			ScaleEntity r\Objects[1], RoomScale, RoomScale ,RoomScale
-			PositionEntity r\Objects[1], r\x + 448.0 * RoomScale, 0, r\z + 192.0 * RoomScale
-			EntityParent r\Objects[1], r\obj
-			
-			de.Decals = CreateDecal(0, r\x + 456.0 * RoomScale, 0.005, r\z + 135.0 * RoomScale, 90, Rand(360), 0)
-			EntityParent(de\obj, r\obj)
-			
-			sc.SecurityCams = CreateSecurityCam(r\x - 336.0 * RoomScale, r\y + 352 * RoomScale, r\z + 48.0 * RoomScale, r, True)
-			sc\angle = 270
-			sc\turn = 45
-			sc\room = r
-			TurnEntity(sc\CameraObj, 20, 0, 0)
-			EntityParent(sc\obj, r\obj)
-			
-			PositionEntity(sc\ScrObj, r\x + 1456 * RoomScale, 608 * RoomScale, r\z +352.0 * RoomScale)
-			TurnEntity(sc\ScrObj, 0, 90, 0)
-			EntityParent(sc\ScrObj, r\obj)
-			
-			r\Objects[2] = CreatePivot()
-			PositionEntity (r\Objects[2], EntityX(r\obj) + 40.0 * RoomScale, 460.0 * RoomScale, EntityZ(r\obj) + 1072.0 * RoomScale)
-			r\Objects[3] = CreatePivot()
-			PositionEntity (r\Objects[3], EntityX(r\obj) - 80.0 * RoomScale, 100.0 * RoomScale, EntityZ(r\obj) + 526.0 * RoomScale)
-			r\Objects[4] = CreatePivot()
-			PositionEntity (r\Objects[4], EntityX(r\obj) - 128.0 * RoomScale, 100.0 * RoomScale, EntityZ(r\obj) + 320.0 * RoomScale)
-			
-			r\Objects[5] = CreatePivot()
-			PositionEntity (r\Objects[5], EntityX(r\obj) + 660.0 * RoomScale, 100.0 * RoomScale, EntityZ(r\obj) + 526.0 * RoomScale)
-			r\Objects[6] = CreatePivot()
-			PositionEntity (r\Objects[6], EntityX(r\obj) + 700 * RoomScale, 100.0 * RoomScale, EntityZ(r\obj) + 320.0 * RoomScale)
-			
-			r\Objects[7] = CreatePivot()
-			PositionEntity (r\Objects[7], EntityX(r\obj) + 1472.0 * RoomScale, 100.0 * RoomScale, EntityZ(r\obj) + 912.0 * RoomScale)
-			
-			For i = 2 To 7
-				EntityParent(r\Objects[i], r\obj)
-			Next
-			
-			;3384,510,2400
-			CreateDevilEmitter(r\x+3384.0*RoomScale,r\y+510.0*RoomScale,r\z+2400.0*RoomScale,r,1,4)
 			;[End Block]
 		Case "room2scps"
 			;[Block]
@@ -7149,8 +7070,10 @@ Function CreateMap()
 	For i = 0 To 2
 		;need more rooms if there are less than 5 of them
 		temp = -Room1Amount[i]+5
+		If i = 1 Then temp = temp + 1
 		
 		If temp > 0 Then
+			
 			
 			For y = (MapHeight/ZoneAmount)*(2-i)+1 To ((MapHeight/ZoneAmount) * ((2-i)+1.0))-2
 				
@@ -7368,7 +7291,6 @@ Function CreateMap()
 	
 	Local min_pos = 1, max_pos = Room1Amount[0]-1
 	
-	MapRoom(ROOM1, 0) = "start"	
 	SetRoom("roompj", ROOM1, Floor(0.1*Float(Room1Amount[0])),min_pos,max_pos)
 	SetRoom("914", ROOM1, Floor(0.3*Float(Room1Amount[0])),min_pos,max_pos)
 	SetRoom("room1archive",ROOM1,Floor(0.5*Float(Room1Amount[0])),min_pos,max_pos)
@@ -7402,6 +7324,8 @@ Function CreateMap()
 	min_pos = Room1Amount[0]
 	max_pos = Room1Amount[0]+Room1Amount[1]-1
 	
+	MapRoom(ROOM1, Room1Amount[0]) = "start"
+	
 	SetRoom("room079", ROOM1, Room1Amount[0]+Floor(0.15*Float(Room1Amount[1])),min_pos,max_pos)
     SetRoom("room106", ROOM1, Room1Amount[0]+Floor(0.3*Float(Room1Amount[1])),min_pos,max_pos)
     SetRoom("008", ROOM1, Room1Amount[0]+Floor(0.4*Float(Room1Amount[1])),min_pos,max_pos)
@@ -7414,7 +7338,6 @@ Function CreateMap()
 	MapRoom(ROOM2, Room2Amount[0]+Floor(0.1*Float(Room2Amount[1]))) = "room2nuke"
 	SetRoom("room2tunnel", ROOM2, Room2Amount[0]+Floor(0.25*Float(Room2Amount[1])),min_pos,max_pos)
 	SetRoom("room049", ROOM2, Room2Amount[0]+Floor(0.4*Float(Room2Amount[1])),min_pos,max_pos)
-	SetRoom("room2shaft",ROOM2,Room2Amount[0]+Floor(0.6*Float(Room2Amount[1])),min_pos,max_pos)
 	SetRoom("testroom", ROOM2, Room2Amount[0]+Floor(0.7*Float(Room2Amount[1])),min_pos,max_pos)
 	SetRoom("room2servers", ROOM2, Room2Amount[0]+Floor(0.9*Room2Amount[1]),min_pos,max_pos)
 	
@@ -8740,12 +8663,7 @@ End Function
 
 
 
-
 ;~IDEal Editor Parameters:
-;~F#2#A#35#102#111#118#11F#126#13F#147#14F#2F4#304#315#33D#34B#35B#360#36B#413
-;~F#51E#53F#563#57F#58A#5C6#5D6#5FF#63B#643#658#6A7#6B1#136A#13EC#13F8#143D#1448#1459#145E
-;~F#146D#1484#1505#150E#15D0#15ED#15F4#15FA#1608#162B#1650#1683#17CA#1803#1818#190C#19E1#19E6#19F6#1CA3
-;~F#1CC2#1CC9#1D2A#1DA6#1DD1#1DF2#1E05#1E1C#1E2F#1E36#1E6A#1E75#1E9D#1EFA#1F06#1F11#1F17#1F21#1F27#1F3D
-;~F#1F51#1F6F
-;~B#1230
+;~F#2#A#102#111#118#11F#126#13F#147#13EE#140F
+;~B#11E1
 ;~C#Blitz3D
