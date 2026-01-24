@@ -2025,7 +2025,7 @@ Function CreateRoom.Rooms(zone%, roomshape%, x#, y#, z#, name$ = "")
 	Local r.Rooms = New Rooms
 	Local rt.RoomTemplates
 	
-	r\zone = zone
+	r\zone = 1
 	
 	r\x = x : r\y = y : r\z = z
 	
@@ -2059,7 +2059,7 @@ Function CreateRoom.Rooms(zone%, roomshape%, x#, y#, z#, name$ = "")
 	For rt.RoomTemplates = Each RoomTemplates
 		
 		For i = 0 To 4
-			If rt\zone[i]=zone Then 
+			If rt\zone[i]=1 Then 
 				If rt\Shape = roomshape Then temp=temp+rt\Commonness : Exit
 			EndIf
 		Next
@@ -2070,7 +2070,7 @@ Function CreateRoom.Rooms(zone%, roomshape%, x#, y#, z#, name$ = "")
 	temp = 0
 	For rt.RoomTemplates = Each RoomTemplates
 		For i = 0 To 4
-			If rt\zone[i]=zone And rt\Shape = roomshape Then
+			If rt\zone[i]=1 And rt\Shape = roomshape Then
 				temp=temp+rt\Commonness
 				If RandomRoom > temp - rt\Commonness And RandomRoom <= temp Then
 					r\RoomTemplate = rt
@@ -7039,7 +7039,7 @@ Function CreateMap()
 	
 	;count the amount of rooms
 	For y = 1 To MapHeight - 1
-		zone% = GetZone(y)
+		zone% = 1
 		
 		For x = 1 To MapWidth - 1
 			If MapTemp(x, y) > 0 Then
@@ -7136,18 +7136,9 @@ Function CreateMap()
 	
 	
 	;force more room4s and room2Cs
-	For i = 0 To 2
-		
-		Select i
-			Case 2
-				zone=2
-				temp2=MapHeight/3;-1
-			Case 1
-				zone=MapHeight/3+1
-				temp2=MapHeight*(2.0/3.0)-1
-			Case 0
-				zone=MapHeight*(2.0/3.0)+1
-				temp2=MapHeight-2
+    For i = 0 To 2
+        zone = MapHeight/3+1
+        temp2 = MapHeight*(2.0/3.0)-1
 		End Select
 		
 		If Room4Amount[i]<1 Then ;we want at least 1 ROOM4
@@ -7383,13 +7374,7 @@ Function CreateMap()
 		
 		;zone% = GetZone(y)
 		
-		If y < MapHeight/3+1 Then
-			zone=3
-		ElseIf y < MapHeight*(2.0/3.0);-1
-			zone=2
-		Else
-			zone=1
-		EndIf
+		zone = 1 
 		
 		For x = 1 To MapWidth - 2
 			If MapTemp(x, y) = 255 Then
@@ -7572,13 +7557,7 @@ Function CreateMap()
 	Local shouldSpawnDoor%
 	For y = MapHeight To 0 Step -1
 		
-		If y<I_Zone\Transition[1]-1 Then
-			zone=3
-		ElseIf y>=I_Zone\Transition[1]-1 And y<I_Zone\Transition[0]-1 Then
-			zone=2
-		Else
-			zone=1
-		EndIf
+		zone = 1 
 		
 		For x = MapWidth To 0 Step -1
 			If MapTemp(x,y) > 0 Then
@@ -7723,7 +7702,7 @@ Function SetRoom(room_name$,room_type%,pos%,min_pos%,max_pos%) ;place a room wit
 End Function
 
 Function GetZone(y%)
-	Return Min(Floor((Float(MapWidth-y)/MapWidth*ZONEAMOUNT)),ZONEAMOUNT-1)
+    Return 1
 End Function
 
 ;-------------------------------------------------------------------------------------------------------
